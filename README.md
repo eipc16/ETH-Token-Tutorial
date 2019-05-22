@@ -281,7 +281,7 @@ Na głównym ekranie Remix IDE wybieramy kompilator, który zostanie użyty do s
     <img src="https://imgur.com/Apr2684.png" />
 </p>
 
-Następnie przechodzimy do zakładki `Run` i wybieramy nasz główny kontrakt z listy (reszta kontraktów zostanie uruchomiona automatycznie). Następnie wybieramy `Environment` na `Injected Web3`, pozwoli to na wykrycie naszego konta Metamask. Następnie klikamy w przycisk `Deploy` i zatwierdzamy dokonanie transkacji.
+Przechodzimy do zakładki `Run` i wybieramy nasz główny kontrakt z listy (reszta kontraktów zostanie uruchomiona automatycznie). Następnie zmieniamy `Environment` na `Injected Web3` (pozwoli to na wykrycie naszego konta Metamask). Następnie klikamy w przycisk `Deploy` i zatwierdzamy dokonanie transkacji.
 
 <p align="center">
     <img src="https://imgur.com/8oGTIas.png" />
