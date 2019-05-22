@@ -48,7 +48,7 @@ Każda operacja na blockchainie wykonywana jest poprzez wykorzystanie tzw. kontr
 
 ### Kontrakt Safe-Math
 
-Podstawowym celem tego kontraktu jest zapewnienie bezpiecznych operacji dodawania, odejmowania, mnożenia i dzielenia liczb z wykluczeniem możliwości wystąpienie przepełnienia.
+Podstawowym celem tego kontraktu jest zapewnienie bezpiecznych operacji dodawania, odejmowania, mnożenia i dzielenia liczb z wykluczeniem możliwości wystąpienia przepełnienia.
 
 ```solidity
 // Safe Math - used to deal with overflows and divide_by_zero exceptions
@@ -307,7 +307,7 @@ W celu weryfikacji i opublikowania naszego kontraktu klikamy w opcję `Verify an
     <img src="https://imgur.com/jjXIkpZ.png"/>
 </p>
 
-W polu `Enter the Solidity Contract Code below` wklejamy cały kod naszego kontraktu z Remix IDE, a następnie wybieramy opcję `Verify and Publish` na dole strony. Po udanej operacji zostanie wyświetlona odpowiednia strona, na dole której znajduje się pole `ContractABI`, które zawiera pozwoli nam na oddziaływanie z kontraktem na poziomie języka JavaScript.
+W polu `Enter the Solidity Contract Code below` wklejamy cały kod naszego kontraktu z Remix IDE, a następnie wybieramy opcję `Verify and Publish` na dole strony. Po udanej operacji zostanie wyświetlona odpowiednia strona, na dole której znajduje się pole `ContractABI`, którego zawartość pozwoli nam na oddziaływanie z kontraktem na poziomie języka JavaScript.
 
 
 <p align="center">
