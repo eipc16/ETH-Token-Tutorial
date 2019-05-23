@@ -44,7 +44,7 @@ Po wybraniu jednej z opcji środki powinny zostać przelane na odpowiednie konto
 
 ## Deploy kontraktu
 
-Każda operacja na blockchainie wykonywana jest poprzez wykorzystanie tzw. kontraktu, który definiuje wszystkie wykonywane akcje. Poniżej znajduje się kod pięciu kontraktów. Cztery z nich to kontrakty pomocnicze, natomiast ostatni jest kontraktem głównym, który zawiera wszelkie informacje o naszym kontrakcie.
+Każda operacja na blockchainie wykonywana jest poprzez wykorzystanie tzw. kontraktu, który definiuje wszystkie wykonywane akcje. Poniżej znajduje się kod pięciu kontraktów. Cztery z nich to kontrakty pomocnicze, natomiast ostatni jest kontraktem głównym, który zawiera wszelkie informacje o naszym tokenie.
 
 ### Kontrakt Safe-Math
 
@@ -335,7 +335,7 @@ Przedstawiony powyżej kod pozwoli nam na odnoszenie się do naszego kontraktu z
 ## Używanie kontraktu
 
 Do implementacji aplikacji umożliwiającej przelew środków na dowolny portfel ETH wykorzystamy bibliotekę React.js. Aby rozpocząć projekt będziemy potrzebować npm ([Link](https://www.npmjs.com)).
-Po zainstalowaniu menadżera pakietów przechodzimy do folderu, w którym chcemy rozpocząc projekt, uruchamiamy konsolę i wpisujemy polecenie:
+Po zainstalowaniu menadżera pakietów przechodzimy do folderu, w którym chcemy rozpocząć projekt, uruchamiamy konsolę i wpisujemy polecenie:
 
 ```Bash
 npm init react-app eth-token
