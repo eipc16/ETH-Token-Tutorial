@@ -316,7 +316,7 @@ W polu `Enter the Solidity Contract Code below` wklejamy cały kod naszego kontr
     <img src="https://imgur.com/bV7M4T8.png"/>
 </p>
 
-Zawartość pola `ContractABI` kopiujemy i umieszczamy w kodzie źródłowym naszej strony (`src/tokens/TeacheCoin.js`) w przedstawionej poniżej postaci.
+Zawartość pola `ContractABI` zostanie umieszczona w kodzie źródłowym naszej strony (`src/tokens/TeacheCoin.js`) w przedstawionej poniżej postaci.
 
 ```JavaScript
 const Coin = {
@@ -334,4 +334,234 @@ Przedstawiony powyżej kod pozwoli nam na odnoszenie się do naszego kontraktu z
 
 ## Używanie kontraktu
 
-//TODO: implementacja JS
+Do implementacji aplikacji umożliwiającej przelew środków na dowolny portfel ETH wykorzystamy bibliotekę React.js. Aby rozpocząć projekt będziemy potrzebować npm ([Link](https://www.npmjs.com)).
+Po zainstalowaniu menadżera pakietów przechodzimy do folderu, w którym chcemy rozpocząc projekt, uruchamiamy konsolę i wpisujemy polecenie:
+
+```Bash
+npm init react-app eth-token
+```
+
+Szczegółowe informacje dotyczące inicjacji projektu React.js znajdują się pod adresem https://github.com/facebook/create-react-app.
+
+Po utworzeniu projektu kopiujemy plik `TeacheCoin.js` stworzony w poprzednim etapie do folderu `src/tokens/`. Następnie zamieniamy zawartość pliku `App.js` na poniższą
+
+```JavaScript
+import React, { Component } from 'react';
+import TeacheCoin from './tokens/TeacheCoin'
+import './App.css';
+
+class SendTokens extends Component {
+
+  constructor() {
+    super();
+
+    this.state = {
+      balance: 0,
+      destWallet: "",
+      destAmount: 0
+    }
+
+    this.isWeb3 = false;
+    this.isWeb3Locked = false;
+
+    this.loadBalance = this.loadBalance.bind(this)
+    this.checkWeb3Compatibility = this.checkWeb3Compatibility.bind(this)
+  }
+
+  componentDidMount() {
+    window.addEventListener('load', this.checkWeb3Compatibility)
+
+    if (window.web3) {
+        window.web3.currentProvider.publicConfigStore.on('update', () => {
+            this.checkWeb3Compatibility()
+        })
+    }
+  }
+
+  checkWeb3Compatibility() {
+      if (window.web3) {
+          this.isWeb3 = true;
+          window.web3.eth.getCoinbase((error, coinbase) => {
+              if (error || coinbase === null) {
+                  this.isWeb3Locked = true;
+              } else {
+                  this.isWeb3Locked = false;
+                  this.setState({
+                      account: coinbase,
+                      token: window.web3.eth.contract(TeacheCoin.abi).at(TeacheCoin.address)
+                  }, () => {
+                      this.loadBalance()
+                  })
+              }
+          })
+      } else {
+          this.isWeb3 = false;
+      }
+  }
+
+  loadBalance() {
+      if (this.isWeb3) {
+          window.web3.eth.getCoinbase((error, coinbase) => {
+            let token = this.state.token
+            token.balanceOf(coinbase, (error, response) => {
+                if (!error) {
+                    let balance = response.c[0] / 10000
+                    balance = balance >= 0 ? balance : 0
+
+                    this.setState({
+                        balance: balance,
+                        symbol: TeacheCoin.symbol,
+                        decimal: '1e' + TeacheCoin.decimal
+                    })
+                }
+            })
+          })
+      }
+  }
+
+  sendTokens = (event) => {
+    event.preventDefault()
+
+    const balance = this.state.balance
+    const amount = this.state.destAmount;
+    const target = this.state.destWallet
+    const token = this.state.token
+    const decimals = this.state.decimal;
+
+    if(amount <= balance && amount > 0 && token) {
+        token.transfer(target, amount * decimals, (error, response) => {
+            if(error || error !== null) {
+                alert(error);
+            } else {
+                alert('Pomyślnie wysłano ' + amount + ' ' + this.state.symbol);
+                this.loadBalance()
+            }
+        })
+    }
+  }
+
+  handleAddressChange = (event) => {
+    this.setState({
+      destWallet: event.target.value
+  })
+  }
+
+  handleAmountChange = (event) => {
+    this.setState({
+      destAmount: event.target.value
+  })
+  }
+
+  render() {
+    return (
+      <div className="main-container">
+        <p className="form-label">Stan konta</p>
+        <p className="form-balance">{this.state.balance} {this.state.symbol}</p>
+
+        <p className="form-label">Portfel odbiorcy</p>
+        <input type="text" className="usr-input" onChange={e => this.handleAddressChange(e)}/>
+
+        <p className="form-label">Liczba tokenów do wysłania</p>
+        <input type="number" className="usr-input" 
+              min="0" max={this.state.balance} onChange={e => this.handleAmountChange(e)} />
+        <br/>
+        <input type="button" className="send-btn" onClick={e => this.sendTokens(e)} value="Wyślij" /> 
+      </div>
+    )
+  }
+
+}
+
+function App() {
+
+  return (
+    <div className="App">
+      <SendTokens className="token-container"/>
+    </div>
+  );
+}
+
+export default App;
+```
+
+Metoda `checkWeb3Compatibility` uruchamiana jest przy każdym załadowaniu strony, sprawdza ona czy użytkownik korzysta z przeglądarki obsługującej `web3` oraz czy posiada on odblokowany portfel, a następnie ładuje stan konta użytkownika poprzez metodę `loadBalance()`.
+
+Pobrany w metodzie `loadBalance()` stan konta jest odpowiednio skalowany w linijce
+
+```JavaScript
+let balance = response.c[0] / 10000
+```
+
+W momencie kiedy użytkownik kliknie w przycisk `Wyślij` uruchamiana jest metoda `SendTokens()`, która po sprawdzeniu konta użytkownika wykonuje przy użyciu wcześniej zdefiniowanego ABI operację `transfer` na kontrakcie.
+
+```JavaScript
+token.transfer(target, amount * decimals, (error, response) => {
+    if(error || error !== null) {
+        alert(error);
+    } else {
+        alert('Pomyślnie wysłano ' + amount + ' ' + this.state.symbol);
+        this.loadBalance();
+    }
+})
+```
+
+Następnie w pliku `App.css` dopisujemy poniższy kod
+
+```CSS
+.token-container {
+  text-align: center;
+}
+
+.main-container {
+  display: block;
+}
+
+.form-label {
+  font-size: 1.2rem;
+}
+
+.form-balance {
+  font-size: 0.8rem;
+}
+
+.usr-input {
+  min-width: 20vw;
+  min-height: 3vh;
+  font-size: 0.8rem;
+  background-color: white;
+  border: solid 1px lightgrey;
+  border-radius: 5px;
+}
+
+.send-btn {
+  margin-top: 0.9em;
+  min-width: 5vw;
+  min-height: 3vw;
+  background-color: white;
+  border: solid 1px grey;
+  border-radius: 5px;
+}
+
+.send-btn:active {
+  background-color:lightgrey;
+}
+```
+
+Efekt końcowy powinien wyglądać następująco
+
+<p align="center">
+    <img src="https://imgur.com/82PUa87.png"/>
+</p>
+
+
+Po kliknięciu w przycisk `Wyślij` rozszerzenie Metamask zapyta o zgodę na dokonanie transferu
+
+<p align="center">
+    <img src="https://imgur.com/H7sBfsq.png"/>
+</p>
+
+Zatwierdzenie akcji przez naciśnięcie przycisku `Submit` powinno przelać tokeny na wybrane przez nas konto.
+
+<p align="center">
+    <img src="https://imgur.com/L70tZ9n.png"/>
+</p>

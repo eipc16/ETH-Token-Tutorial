@@ -31,3 +31,41 @@
     transform: rotate(360deg);
   }
 }
+
+.token-container {
+  text-align: center;
+}
+
+.main-container {
+  display: block;
+}
+
+.form-label {
+  font-size: 1.2rem;
+}
+
+.form-balance {
+  font-size: 0.8rem;
+}
+
+.usr-input {
+  min-width: 20vw;
+  min-height: 3vh;
+  font-size: 0.8rem;
+  background-color: white;
+  border: solid 1px lightgrey;
+  border-radius: 5px;
+}
+
+.send-btn {
+  margin-top: 0.9em;
+  min-width: 5vw;
+  min-height: 3vw;
+  background-color: white;
+  border: solid 1px grey;
+  border-radius: 5px;
+}
+
+.send-btn:active {
+  background-color:lightgrey;
+}
